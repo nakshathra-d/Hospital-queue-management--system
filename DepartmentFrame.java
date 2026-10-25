@@ -2,67 +2,140 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class DepartmentFrame extends JFrame implements ActionListener {
+public class DepartmentFrame extends JFrame
+        implements ActionListener {
 
-    JLabel titleLabel;
-    JButton generalButton, cardiologyButton, entButton, pediatricsButton;
+    JLabel title;
 
-    DepartmentFrame() {
+    JButton generalButton;
+    JButton cardioButton;
+    JButton entButton;
+    JButton pediatricButton;
+    JButton backButton;
+
+    public DepartmentFrame() {
 
         setTitle("Department Selection");
-        setSize(450, 300);
-        setLayout(new GridLayout(5, 1, 10, 10));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-        // Title
-        titleLabel = new JLabel("Select Department", JLabel.CENTER);
+        // Heading
+        title = new JLabel(
+                "DEPARTMENT SELECTION",
+                JLabel.CENTER);
+
+        title.setFont(
+                new Font("Arial", Font.BOLD, 24));
+
+        title.setForeground(Color.WHITE);
+        title.setBackground(new Color(25, 55, 100));
+        title.setOpaque(true);
+
+        title.setBorder(
+                BorderFactory.createEmptyBorder(
+                        25, 10, 25, 10));
+
+        add(title, BorderLayout.NORTH);
+
+        // Center panel
+        JPanel centerPanel = new JPanel(
+                new GridLayout(2, 2, 25, 25));
+
+        centerPanel.setBorder(
+                BorderFactory.createEmptyBorder(
+                        50, 100, 50, 100));
 
         // Department buttons
         generalButton = new JButton("General Medicine");
-        cardiologyButton = new JButton("Cardiology");
+        cardioButton = new JButton("Cardiology");
         entButton = new JButton("ENT");
-        pediatricsButton = new JButton("Pediatrics");
+        pediatricButton = new JButton("Pediatrics");
 
-        // Add components
-        add(titleLabel);
-        add(generalButton);
-        add(cardiologyButton);
-        add(entButton);
-        add(pediatricsButton);
+        JButton[] departmentButtons = {
+            generalButton,
+            cardioButton,
+            entButton,
+            pediatricButton
+        };
 
-        // Event Handling
-        generalButton.addActionListener(this);
-        cardiologyButton.addActionListener(this);
-        entButton.addActionListener(this);
-        pediatricsButton.addActionListener(this);
+        for (JButton button : departmentButtons) {
 
+            button.setFont(
+                    new Font("Arial", Font.BOLD, 20));
+
+            button.setBackground(
+                    new Color(230, 240, 250));
+
+            button.setFocusPainted(false);
+            button.addActionListener(this);
+
+            centerPanel.add(button);
+        }
+
+        add(centerPanel, BorderLayout.CENTER);
+
+        // Bottom panel
+        JPanel bottomPanel = new JPanel(
+                new FlowLayout(
+                        FlowLayout.CENTER, 25, 20));
+
+        backButton = new JButton("Back");
+
+        backButton.setFont(
+                new Font("Arial", Font.BOLD, 17));
+
+        backButton.setPreferredSize(
+                new Dimension(140, 45));
+
+        backButton.setFocusPainted(false);
+
+        // Back button action
+        backButton.addActionListener(this);
+
+        bottomPanel.add(backButton);
+
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        // Window settings
+        setSize(900, 600);
+        setLocationRelativeTo(null);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getSource() == generalButton) {
-            JOptionPane.showMessageDialog(this,
-                    "General Medicine Selected");
+        // Back to Patient Registration
+        if (e.getSource() == backButton) {
+
+            dispose();
+
+            PatientRegistrationFrame patientFrame =
+                    new PatientRegistrationFrame();
+
+            patientFrame.setVisible(true);
         }
 
-        if (e.getSource() == cardiologyButton) {
-            JOptionPane.showMessageDialog(this,
-                    "Cardiology Selected");
-        }
+        // Department selection
+        else {
 
-        if (e.getSource() == entButton) {
-            JOptionPane.showMessageDialog(this,
-                    "ENT Selected");
-        }
+            JButton selectedButton =
+                    (JButton) e.getSource();
 
-        if (e.getSource() == pediatricsButton) {
-            JOptionPane.showMessageDialog(this,
-                    "Pediatrics Selected");
+            String department =
+                    selectedButton.getText();
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    department + " selected successfully!");
         }
     }
 
     public static void main(String[] args) {
-        new DepartmentFrame();
+
+        SwingUtilities.invokeLater(() -> {
+            new DepartmentFrame();
+        });
     }
-}
+        }
