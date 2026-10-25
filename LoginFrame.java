@@ -4,171 +4,139 @@ import java.awt.event.*;
 
 public class LoginFrame extends JFrame implements ActionListener {
 
-    JLabel titleLabel, usernameLabel, passwordLabel;
-    JTextField usernameField, passwordField;
-    JButton loginButton, clearButton;
+    JLabel title, userLabel, passLabel;
+    JTextField userField;
+    JPasswordField passField;
+    JButton loginButton, clearButton, backButton;
 
     LoginFrame() {
-
-        // Frame Settings
-        setTitle("Hospital Queue Management System");
+        setTitle("Login");
         setSize(900, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setResizable(true);
         setLayout(new BorderLayout());
 
-        // Title Board
-        JPanel titlePanel = new JPanel(new BorderLayout());
-        titlePanel.setPreferredSize(new Dimension(900, 100));
-        titlePanel.setBackground(new Color(25, 75, 130));
+        // Heading
+        title = new JLabel(
+                "HOSPITAL QUEUE MANAGEMENT SYSTEM",
+                JLabel.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 24));
+        title.setForeground(Color.WHITE);
+        title.setBackground(new Color(25, 55, 100));
+        title.setOpaque(true);
+        title.setBorder(
+                BorderFactory.createEmptyBorder(25, 10, 25, 10));
 
-        titleLabel = new JLabel(
-            "Hospital Queue Management System",
-            JLabel.CENTER
-        );
+        add(title, BorderLayout.NORTH);
 
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        titleLabel.setForeground(Color.WHITE);
+        // Login Form
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
 
-        titlePanel.add(titleLabel, BorderLayout.CENTER);
+        gbc.insets = new Insets(12, 15, 12, 15);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Form Panel
-        JPanel formPanel = new JPanel(
-            new GridLayout(2, 2, 15, 20)
-        );
+        userLabel = new JLabel("Username:");
+        passLabel = new JLabel("Password:");
 
-        formPanel.setBorder(
-            BorderFactory.createEmptyBorder(30, 40, 30, 40)
-        );
-        formPanel.setBackground(Color.WHITE);
+        userLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        passLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 
-        // Labels
-        usernameLabel = new JLabel("Username:");
-        passwordLabel = new JLabel("Password:");
+        userField = new JTextField(15);
+        passField = new JPasswordField(15);
 
-        usernameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-        passwordLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        userField.setFont(new Font("Arial", Font.PLAIN, 16));
+        passField.setFont(new Font("Arial", Font.PLAIN, 16));
 
-        // Text Fields
-        usernameField = new JTextField();
-        passwordField = new JTextField();
+        userField.setPreferredSize(new Dimension(230, 38));
+        passField.setPreferredSize(new Dimension(230, 38));
 
-        usernameField.setFont(new Font("Arial", Font.PLAIN, 16));
-        passwordField.setFont(new Font("Arial", Font.PLAIN, 16));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        formPanel.add(userLabel, gbc);
 
-        usernameField.setPreferredSize(new Dimension(250, 35));
-        passwordField.setPreferredSize(new Dimension(250, 35));
+        gbc.gridx = 1;
+        formPanel.add(userField, gbc);
 
-        formPanel.add(usernameLabel);
-        formPanel.add(usernameField);
-        formPanel.add(passwordLabel);
-        formPanel.add(passwordField);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        formPanel.add(passLabel, gbc);
 
-        // Center the form without stretching its fields
-        JPanel centerPanel = new JPanel(new GridBagLayout());
-        centerPanel.setBackground(Color.WHITE);
+        gbc.gridx = 1;
+        formPanel.add(passField, gbc);
 
-        JPanel formBox = new JPanel(new BorderLayout(10, 10));
-        formBox.setPreferredSize(new Dimension(600, 220));
-        formBox.setBackground(Color.WHITE);
+        add(formPanel, BorderLayout.CENTER);
 
-        formBox.add(formPanel, BorderLayout.CENTER);
-
-        centerPanel.add(formBox);
-
-        // Button Panel
+        // Buttons
         JPanel buttonPanel = new JPanel(
-            new FlowLayout(FlowLayout.CENTER, 25, 20)
-        );
-
-        buttonPanel.setBackground(Color.WHITE);
+                new FlowLayout(FlowLayout.CENTER, 25, 25));
 
         loginButton = new JButton("Login");
         clearButton = new JButton("Clear");
+        backButton = new JButton("Back");
 
-        loginButton.setPreferredSize(new Dimension(130, 40));
-        clearButton.setPreferredSize(new Dimension(130, 40));
+        JButton[] buttons = {
+            loginButton, clearButton, backButton
+        };
+
+        for (JButton button : buttons) {
+            button.setFont(new Font("Arial", Font.BOLD, 17));
+            button.setPreferredSize(new Dimension(130, 45));
+            button.setFocusPainted(false);
+        }
 
         loginButton.setBackground(new Color(25, 100, 180));
         loginButton.setForeground(Color.WHITE);
-        loginButton.setFocusPainted(false);
-
-        clearButton.setBackground(new Color(220, 230, 240));
-        clearButton.setFocusPainted(false);
 
         buttonPanel.add(loginButton);
         buttonPanel.add(clearButton);
+        buttonPanel.add(backButton);
 
-        // Event Handling
-        loginButton.addActionListener(this);
-        clearButton.addActionListener(this);
-
-        // Add Panels to Frame
-        add(titlePanel, BorderLayout.NORTH);
-        add(centerPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Display Frame
+        loginButton.addActionListener(this);
+        clearButton.addActionListener(this);
+        backButton.addActionListener(this);
+
+        setLocationRelativeTo(null);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
     }
 
-    @Override
     public void actionPerformed(ActionEvent e) {
 
-        try {
+        if (e.getSource() == loginButton) {
 
-            if (e.getSource() == loginButton) {
+            String username = userField.getText();
+            String password =
+                    new String(passField.getPassword());
 
-                String username = usernameField.getText().trim();
-                String password = passwordField.getText().trim();
+            if (username.equals("admin")
+                    && password.equals("1234")) {
 
-                if (username.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        this, "Login Successful!");
 
-                    JOptionPane.showMessageDialog(
-                        this,
-                        "Please enter username and password."
-                    );
+                new PatientRegistrationFrame();
+                dispose();
 
-                } else if (username.equals("admin")
-                        && password.equals("1234")) {
-
-                    JOptionPane.showMessageDialog(
-                        this,
-                        "Login Successful!"
-                    );
-
-                    new PatientRegistrationFrame();
-                    dispose();
-
-                } else {
-
-                    JOptionPane.showMessageDialog(
-                        this,
-                        "Invalid Username or Password."
-                    );
-                }
+            } else {
+                JOptionPane.showMessageDialog(
+                        this, "Invalid Username or Password!");
             }
+        }
 
-            if (e.getSource() == clearButton) {
+        if (e.getSource() == clearButton) {
+            userField.setText("");
+            passField.setText("");
+        }
 
-                usernameField.setText("");
-                passwordField.setText("");
-                usernameField.requestFocus();
-            }
-
-        } catch (Exception ex) {
-
-            JOptionPane.showMessageDialog(
-                this,
-                "Error: " + ex.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE
-            );
+        if (e.getSource() == backButton) {
+            new HomeFrame();
+            dispose();
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LoginFrame());
+        new LoginFrame();
     }
 }
