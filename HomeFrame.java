@@ -4,168 +4,120 @@ import java.awt.event.*;
 
 public class HomeFrame extends JFrame implements ActionListener {
 
-    JLabel titleLabel, welcomeLabel;
-    JLabel descriptionLabel1, descriptionLabel2;
-    JLabel footerLabel;
-
+    JLabel titleLabel, subtitleLabel, welcomeLabel;
     JButton loginButton, exitButton;
+    JPanel headerPanel, centerPanel, buttonPanel;
 
     HomeFrame() {
 
-        // Frame Settings
         setTitle("Hospital Queue Management System");
         setSize(900, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setResizable(true);
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(20, 20));
 
         // Header Panel
-        JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setPreferredSize(new Dimension(900, 100));
+        headerPanel = new JPanel();
+        headerPanel.setLayout(new GridLayout(2, 1, 5, 5));
         headerPanel.setBackground(new Color(25, 75, 130));
 
-        titleLabel = new JLabel(
-            "Hospital Queue Management System",
-            JLabel.CENTER
-        );
-
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        titleLabel = new JLabel("Hospital Queue Management System", JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
         titleLabel.setForeground(Color.WHITE);
 
-        headerPanel.add(titleLabel, BorderLayout.CENTER);
+        subtitleLabel = new JLabel(
+                "Home",
+                JLabel.CENTER);
+        subtitleLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        subtitleLabel.setForeground(Color.WHITE);
 
-        // Main Content Panel
-        JPanel contentPanel = new JPanel();
-        contentPanel.setLayout(new BoxLayout(
-            contentPanel, BoxLayout.Y_AXIS
-        ));
-        contentPanel.setBackground(Color.WHITE);
-        contentPanel.setBorder(
-            BorderFactory.createEmptyBorder(80, 40, 50, 40)
-        );
+        headerPanel.add(titleLabel);
+        headerPanel.add(subtitleLabel);
 
-        // Welcome Heading
+        // Center Panel
+        centerPanel = new JPanel();
+        centerPanel.setLayout(new GridLayout(3, 1, 10, 10));
+        centerPanel.setBackground(Color.WHITE);
+
         welcomeLabel = new JLabel(
-            "Welcome to Our Hospital",
-            JLabel.CENTER
-        );
+                "Welcome to Our Hospital",
+                JLabel.CENTER);
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
 
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 30));
-        welcomeLabel.setForeground(new Color(25, 75, 130));
-        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel infoLabel = new JLabel(
+                "Your health and care are our priority.",
+                JLabel.CENTER);
+        infoLabel.setFont(new Font("Arial", Font.PLAIN, 17));
 
-        // Description - No HTML Used
-        descriptionLabel1 = new JLabel(
-            "Manage patient registration and doctor selection.",
-            JLabel.CENTER
-        );
+        JLabel instructionLabel = new JLabel(
+                "Click Login to continue",
+                JLabel.CENTER);
+        instructionLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 
-        descriptionLabel2 = new JLabel(
-            "Generate tokens and check queue status easily.",
-            JLabel.CENTER
-        );
+        centerPanel.add(welcomeLabel);
+        centerPanel.add(infoLabel);
+        centerPanel.add(instructionLabel);
 
-        descriptionLabel1.setFont(
-            new Font("Arial", Font.PLAIN, 17)
-        );
+        // Button Panel
+        buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(
+                FlowLayout.CENTER, 30, 20));
+        buttonPanel.setBackground(Color.WHITE);
 
-        descriptionLabel2.setFont(
-            new Font("Arial", Font.PLAIN, 17)
-        );
-
-        descriptionLabel1.setAlignmentX(Component.CENTER_ALIGNMENT);
-        descriptionLabel2.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Login Button
         loginButton = new JButton("Login");
+        exitButton = new JButton("Exit");
+
         loginButton.setFont(new Font("Arial", Font.BOLD, 18));
-        loginButton.setPreferredSize(new Dimension(160, 45));
-        loginButton.setMaximumSize(new Dimension(160, 45));
+        exitButton.setFont(new Font("Arial", Font.BOLD, 18));
+
+        loginButton.setPreferredSize(new Dimension(150, 45));
+        exitButton.setPreferredSize(new Dimension(150, 45));
+
         loginButton.setBackground(new Color(25, 100, 180));
         loginButton.setForeground(Color.WHITE);
-        loginButton.setFocusPainted(false);
-        loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Exit Button
-        exitButton = new JButton("Exit");
-        exitButton.setFont(new Font("Arial", Font.PLAIN, 16));
-        exitButton.setMaximumSize(new Dimension(160, 40));
-        exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        exitButton.setBackground(new Color(180, 50, 50));
+        exitButton.setForeground(Color.WHITE);
 
-        // Add Components to Content Panel
-        contentPanel.add(welcomeLabel);
-        contentPanel.add(Box.createVerticalStrut(25));
+        buttonPanel.add(loginButton);
+        buttonPanel.add(exitButton);
 
-        contentPanel.add(descriptionLabel1);
-        contentPanel.add(Box.createVerticalStrut(8));
-        contentPanel.add(descriptionLabel2);
-
-        contentPanel.add(Box.createVerticalStrut(35));
-        contentPanel.add(loginButton);
-        contentPanel.add(Box.createVerticalStrut(15));
-        contentPanel.add(exitButton);
-
-        // Footer Panel
-        JPanel footerPanel = new JPanel();
-        footerPanel.setBackground(new Color(235, 242, 250));
-
-        footerLabel = new JLabel(
-            "Hospital Queue Management System"
-        );
-
-        footerLabel.setFont(new Font("Arial", Font.PLAIN, 12));
-        footerPanel.add(footerLabel);
+        // Add panels to frame
+        add(headerPanel, BorderLayout.NORTH);
+        add(centerPanel, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.SOUTH);
 
         // Event Handling
         loginButton.addActionListener(this);
         exitButton.addActionListener(this);
 
-        // Add Panels to Frame
-        add(headerPanel, BorderLayout.NORTH);
-        add(contentPanel, BorderLayout.CENTER);
-        add(footerPanel, BorderLayout.SOUTH);
-
-        // Display Frame
+        // Display frame
+        setLocationRelativeTo(null);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
     }
 
-    @Override
     public void actionPerformed(ActionEvent e) {
 
-        try {
+        if (e.getSource() == loginButton) {
+            new LoginFrame();
+            dispose();
+        }
 
-            if (e.getSource() == loginButton) {
-
-                new LoginFrame();
-                dispose();
-
-            } else if (e.getSource() == exitButton) {
-
-                int choice = JOptionPane.showConfirmDialog(
+        if (e.getSource() == exitButton) {
+            int choice = JOptionPane.showConfirmDialog(
                     this,
                     "Do you want to exit?",
-                    "Confirm Exit",
+                    "Exit Confirmation",
                     JOptionPane.YES_NO_OPTION
-                );
-
-                if (choice == JOptionPane.YES_OPTION) {
-                    System.exit(0);
-                }
-            }
-
-        } catch (Exception ex) {
-
-            JOptionPane.showMessageDialog(
-                this,
-                "Error: " + ex.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE
             );
+
+            if (choice == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            }
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new HomeFrame());
+        new HomeFrame();
     }
 }
