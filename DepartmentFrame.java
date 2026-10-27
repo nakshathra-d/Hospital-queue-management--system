@@ -1,74 +1,70 @@
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class DepartmentFrame extends JFrame
-        implements ActionListener {
+public class DepartmentFrame extends JFrame implements ActionListener {
 
-    JLabel title;
-
-    JButton generalButton;
-    JButton cardioButton;
-    JButton entButton;
-    JButton pediatricButton;
+    JLabel titleLabel;
+    JButton generalButton, cardioButton, entButton, pediatricButton;
     JButton backButton;
+
+    Color navy = new Color(25, 55, 100);
+    Color lightBlue = new Color(230, 240, 250);
+    Color background = new Color(245, 248, 252);
 
     public DepartmentFrame() {
 
-        setTitle("Department Selection");
+        setTitle("Hospital - Department Selection");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(0, 15));
+        getContentPane().setBackground(background);
 
         // Heading
-        title = new JLabel(
-                "DEPARTMENT SELECTION",
-                JLabel.CENTER);
+        titleLabel = new JLabel(
+            "SELECT DEPARTMENT", JLabel.CENTER
+        );
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setBackground(navy);
+        titleLabel.setOpaque(true);
+        titleLabel.setBorder(
+            BorderFactory.createEmptyBorder(25, 10, 25, 10)
+        );
 
-        title.setFont(
-                new Font("Arial", Font.BOLD, 24));
-
-        title.setForeground(Color.WHITE);
-        title.setBackground(new Color(25, 55, 100));
-        title.setOpaque(true);
-
-        title.setBorder(
-                BorderFactory.createEmptyBorder(
-                        25, 10, 25, 10));
-
-        add(title, BorderLayout.NORTH);
-
-        // Center panel
-        JPanel centerPanel = new JPanel(
-                new GridLayout(2, 2, 25, 25));
-
-        centerPanel.setBorder(
-                BorderFactory.createEmptyBorder(
-                        50, 100, 50, 100));
+        add(titleLabel, BorderLayout.NORTH);
 
         // Department buttons
+        JPanel centerPanel = new JPanel(
+            new GridLayout(2, 2, 20, 20)
+        );
+        centerPanel.setBackground(background);
+
+        // Increased outer margins make the buttons narrower
+        centerPanel.setBorder(
+            BorderFactory.createEmptyBorder(60, 180, 50, 180)
+        );
+
         generalButton = new JButton("General Medicine");
         cardioButton = new JButton("Cardiology");
         entButton = new JButton("ENT");
         pediatricButton = new JButton("Pediatrics");
 
-        JButton[] departmentButtons = {
-            generalButton,
-            cardioButton,
-            entButton,
-            pediatricButton
+        JButton[] departments = {
+            generalButton, cardioButton, entButton, pediatricButton
         };
 
-        for (JButton button : departmentButtons) {
-
-            button.setFont(
-                    new Font("Arial", Font.BOLD, 20));
-
-            button.setBackground(
-                    new Color(230, 240, 250));
-
+        for (JButton button : departments) {
+            button.setFont(new Font("Arial", Font.BOLD, 19));
+            button.setBackground(lightBlue);
+            button.setForeground(navy);
             button.setFocusPainted(false);
+            button.setBorder(
+                BorderFactory.createLineBorder(
+                    new Color(190, 210, 230), 2
+                )
+            );
             button.addActionListener(this);
-
             centerPanel.add(button);
         }
 
@@ -76,28 +72,20 @@ public class DepartmentFrame extends JFrame
 
         // Bottom panel
         JPanel bottomPanel = new JPanel(
-                new FlowLayout(
-                        FlowLayout.CENTER, 25, 20));
+            new FlowLayout(FlowLayout.CENTER, 20, 15)
+        );
+        bottomPanel.setBackground(background);
 
         backButton = new JButton("Back");
-
-        backButton.setFont(
-                new Font("Arial", Font.BOLD, 17));
-
-        backButton.setPreferredSize(
-                new Dimension(140, 45));
-
+        backButton.setFont(new Font("Arial", Font.BOLD, 16));
+        backButton.setPreferredSize(new Dimension(140, 42));
         backButton.setFocusPainted(false);
-
-        // Back button action
         backButton.addActionListener(this);
 
         bottomPanel.add(backButton);
-
         add(bottomPanel, BorderLayout.SOUTH);
 
-        // Window settings
-        setSize(900, 600);
+        setSize(1000, 700);
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
@@ -106,36 +94,20 @@ public class DepartmentFrame extends JFrame
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        // Back to Patient Registration
         if (e.getSource() == backButton) {
-
             dispose();
+            new PatientRegistrationFrame();
 
-            PatientRegistrationFrame patientFrame =
-                    new PatientRegistrationFrame();
+        } else {
+            JButton selectedButton = (JButton) e.getSource();
+            String department = selectedButton.getText();
 
-            patientFrame.setVisible(true);
-        }
-
-        // Department selection
-        else {
-
-            JButton selectedButton =
-                    (JButton) e.getSource();
-
-            String department =
-                    selectedButton.getText();
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    department + " selected successfully!");
+            setVisible(false);
+            new DoctorFrame(department, this);
         }
     }
 
     public static void main(String[] args) {
-
-        SwingUtilities.invokeLater(() -> {
-            new DepartmentFrame();
-        });
+        new DepartmentFrame();
     }
-        }
+}
