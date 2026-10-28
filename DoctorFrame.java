@@ -3,197 +3,223 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class DoctorFrame extends JFrame implements ActionListener {
+public class DoctorFrame extends JFrame
+        implements ActionListener {
 
-    JLabel titleLabel, subtitleLabel, selectedLabel;
-    JButton doctor1Button, doctor2Button, doctor3Button;
+    JLabel title, departmentLabel, instructionLabel;
+    JRadioButton doctor1Button, doctor2Button, doctor3Button;
+    ButtonGroup doctorGroup;
     JButton backButton, continueButton;
 
-    DepartmentFrame departmentFrame;
     String department;
     String selectedDoctor = "";
 
-    Color navy = new Color(25, 55, 100);
-    Color lightBlue = new Color(230, 240, 250);
-    Color background = new Color(245, 248, 252);
-    Color borderBlue = new Color(190, 210, 230);
+    private final Color navyBlue = new Color(20, 55, 105);
+    private final Color blue = new Color(35, 105, 190);
+    private final Color lightBlue = new Color(235, 244, 255);
+    private final Color white = Color.WHITE;
+    private final Color textBlue = new Color(25, 55, 95);
 
-    public DoctorFrame(String department,
-                       DepartmentFrame departmentFrame) {
+    DoctorFrame(String dept, String oldDoctor) {
 
-        this.department = department;
-        this.departmentFrame = departmentFrame;
+        department = dept;
 
-        setTitle("Hospital - Doctor Selection");
+        setTitle("Doctor Selection");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(0, 12));
-        getContentPane().setBackground(background);
+        setLayout(new BorderLayout());
+        getContentPane().setBackground(lightBlue);
 
         // Heading
-        titleLabel = new JLabel(
-            "SELECT YOUR DOCTOR", JLabel.CENTER
-        );
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 29));
-        titleLabel.setForeground(Color.WHITE);
-        titleLabel.setBackground(navy);
-        titleLabel.setOpaque(true);
-        titleLabel.setBorder(
-            BorderFactory.createEmptyBorder(24, 10, 24, 10)
-        );
+        title = new JLabel("SELECT DOCTOR", JLabel.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 32));
+        title.setForeground(white);
+        title.setBackground(navyBlue);
+        title.setOpaque(true);
+        title.setBorder(
+                BorderFactory.createEmptyBorder(25, 15, 25, 15));
 
-        add(titleLabel, BorderLayout.NORTH);
+        add(title, BorderLayout.NORTH);
 
-        // Main content
-        JPanel centerPanel = new JPanel(new BorderLayout(10, 15));
-        centerPanel.setBackground(background);
-        centerPanel.setBorder(
-            BorderFactory.createEmptyBorder(20, 100, 15, 100)
-        );
-
-        subtitleLabel = new JLabel(
-            "Department: " + department, JLabel.CENTER
-        );
-        subtitleLabel.setFont(new Font("Arial", Font.BOLD, 21));
-        subtitleLabel.setForeground(navy);
-        subtitleLabel.setBorder(
-            BorderFactory.createEmptyBorder(5, 5, 10, 5)
-        );
-
-        centerPanel.add(subtitleLabel, BorderLayout.NORTH);
-
-        // Compact doctor selection buttons
+        // Doctor selection panel
         JPanel doctorPanel = new JPanel(
-            new GridLayout(3, 1, 15, 15)
-        );
-        doctorPanel.setBackground(background);
+                new GridLayout(5, 1, 10, 15));
+        doctorPanel.setBackground(white);
         doctorPanel.setBorder(
-            BorderFactory.createEmptyBorder(5, 100, 5, 100)
-        );
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(200, 220, 245), 2),
+                        BorderFactory.createEmptyBorder(
+                                35, 60, 35, 60)));
 
-        doctor1Button = new JButton("Dr. Arun");
-        doctor2Button = new JButton("Dr. Meera");
-        doctor3Button = new JButton("Dr. Rahul");
+        departmentLabel = new JLabel("Department: " + department);
+        departmentLabel.setFont(
+                new Font("Arial", Font.BOLD, 20));
+        departmentLabel.setForeground(blue);
 
-        JButton[] doctors = {
+        instructionLabel = new JLabel("Choose a doctor:");
+        instructionLabel.setFont(
+                new Font("Arial", Font.BOLD, 18));
+        instructionLabel.setForeground(blue);
+
+        // Existing doctors based on department
+        String[] doctors;
+
+        switch (department) {
+            case "General Medicine":
+                doctors = new String[]{
+                    "Dr. Arun Kumar",
+                    "Dr. Meera Nair",
+                    "Dr. Rahul Das"
+                };
+                break;
+
+            case "Cardiology":
+                doctors = new String[]{
+                    "Dr. Anil Menon",
+                    "Dr. Lakshmi Raj",
+                    "Dr. Vivek Thomas"
+                };
+                break;
+
+            case "ENT":
+                doctors = new String[]{
+                    "Dr. Suresh Kumar",
+                    "Dr. Nisha Varma",
+                    "Dr. Ajay Mohan"
+                };
+                break;
+
+            case "Pediatrics":
+                doctors = new String[]{
+                    "Dr. Priya Nair",
+                    "Dr. Kiran Joseph",
+                    "Dr. Sneha Das"
+                };
+                break;
+
+            default:
+                doctors = new String[]{
+                    "Dr. Arun Kumar",
+                    "Dr. Meera Nair",
+                    "Dr. Rahul Das"
+                };
+        }
+
+        doctor1Button = new JRadioButton(doctors[0]);
+        doctor2Button = new JRadioButton(doctors[1]);
+        doctor3Button = new JRadioButton(doctors[2]);
+
+        JRadioButton[] doctorButtons = {
             doctor1Button, doctor2Button, doctor3Button
         };
 
-        for (JButton button : doctors) {
-            button.setFont(new Font("Arial", Font.BOLD, 20));
-            button.setPreferredSize(new Dimension(300, 55));
-            button.setBackground(lightBlue);
-            button.setForeground(navy);
+        doctorGroup = new ButtonGroup();
+
+        for (JRadioButton button : doctorButtons) {
+            button.setFont(new Font("Arial", Font.PLAIN, 18));
+            button.setPreferredSize(new Dimension(400, 55));
+            button.setForeground(textBlue);
+            button.setBackground(white);
             button.setFocusPainted(false);
+            button.setOpaque(true);
             button.setBorder(
-                BorderFactory.createLineBorder(borderBlue, 2)
-            );
-            button.addActionListener(this);
+                    BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+            doctorGroup.add(button);
             doctorPanel.add(button);
         }
 
-        centerPanel.add(doctorPanel, BorderLayout.CENTER);
+        // Restore previous doctor selection
+        if (oldDoctor != null) {
+            for (JRadioButton button : doctorButtons) {
+                if (button.getText().equals(oldDoctor)) {
+                    button.setSelected(true);
+                }
+            }
+        }
+
+        doctorPanel.add(departmentLabel, 0);
+        doctorPanel.add(instructionLabel, 1);
+
+        JPanel centerPanel = new JPanel(new GridBagLayout());
+        centerPanel.setBackground(lightBlue);
+        centerPanel.setBorder(
+                BorderFactory.createEmptyBorder(25, 35, 25, 35));
+        centerPanel.add(doctorPanel);
+
         add(centerPanel, BorderLayout.CENTER);
 
-        // Bottom area
-        JPanel bottomPanel = new JPanel(
-            new GridLayout(2, 1, 5, 10)
-        );
-        bottomPanel.setBackground(background);
-        bottomPanel.setBorder(
-            BorderFactory.createEmptyBorder(5, 20, 18, 20)
-        );
-
-        selectedLabel = new JLabel(
-            "Selected Doctor: None", JLabel.CENTER
-        );
-        selectedLabel.setFont(new Font("Arial", Font.BOLD, 19));
-        selectedLabel.setForeground(navy);
-        selectedLabel.setOpaque(true);
-        selectedLabel.setBackground(lightBlue);
-        selectedLabel.setBorder(
-            BorderFactory.createLineBorder(borderBlue, 1)
-        );
-
+        // Navigation buttons
         JPanel buttonPanel = new JPanel(
-            new FlowLayout(FlowLayout.CENTER, 20, 5)
-        );
-        buttonPanel.setBackground(background);
+                new FlowLayout(FlowLayout.CENTER, 25, 20));
+        buttonPanel.setBackground(navyBlue);
+        buttonPanel.setBorder(
+                BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
         backButton = new JButton("Back");
         continueButton = new JButton("Continue");
 
-        styleButton(backButton, lightBlue, navy);
-        styleButton(continueButton, navy, Color.WHITE);
-
-        backButton.addActionListener(this);
-        continueButton.addActionListener(this);
+        styleButton(backButton, white, navyBlue, 110, 48);
+        styleButton(continueButton, blue, white, 145, 48);
 
         buttonPanel.add(backButton);
         buttonPanel.add(continueButton);
 
-        bottomPanel.add(selectedLabel);
-        bottomPanel.add(buttonPanel);
+        add(buttonPanel, BorderLayout.SOUTH);
 
-        add(bottomPanel, BorderLayout.SOUTH);
+        backButton.addActionListener(this);
+        continueButton.addActionListener(this);
 
-        setSize(1000, 700);
+        setSize(900, 600);
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
     }
 
-    private void styleButton(JButton button, Color bg, Color fg) {
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setPreferredSize(new Dimension(160, 44));
-        button.setBackground(bg);
-        button.setForeground(fg);
+    private void styleButton(JButton button, Color background,
+                             Color foreground, int width, int height) {
+        button.setFont(new Font("Arial", Font.BOLD, 17));
+        button.setPreferredSize(new Dimension(width, height));
+        button.setBackground(background);
+        button.setForeground(foreground);
         button.setFocusPainted(false);
+        button.setCursor(
+                Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.setBorder(
+                BorderFactory.createEmptyBorder(8, 15, 8, 15));
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getSource() == backButton) {
+        if (e.getSource() == continueButton) {
+
+            if (doctor1Button.isSelected()) {
+                selectedDoctor = doctor1Button.getText();
+            } else if (doctor2Button.isSelected()) {
+                selectedDoctor = doctor2Button.getText();
+            } else if (doctor3Button.isSelected()) {
+                selectedDoctor = doctor3Button.getText();
+            } else {
+                JOptionPane.showMessageDialog(
+                        this, "Please select a doctor!");
+                return;
+            }
 
             dispose();
-            departmentFrame.setVisible(true);
 
-        } else if (e.getSource() == doctor1Button) {
+            new PrioritySelectionFrame(
+                    department,
+                    selectedDoctor,
+                    "",
+                    "",
+                    "");
+        }
 
-            selectedDoctor = "Dr. Arun";
-            selectedLabel.setText(
-                "Selected Doctor: " + selectedDoctor
-            );
+        else if (e.getSource() == backButton) {
 
-        } else if (e.getSource() == doctor2Button) {
-
-            selectedDoctor = "Dr. Meera";
-            selectedLabel.setText(
-                "Selected Doctor: " + selectedDoctor
-            );
-
-        } else if (e.getSource() == doctor3Button) {
-
-            selectedDoctor = "Dr. Rahul";
-            selectedLabel.setText(
-                "Selected Doctor: " + selectedDoctor
-            );
-
-        } else if (e.getSource() == continueButton) {
-
-            if (selectedDoctor.equals("")) {
-
-                JOptionPane.showMessageDialog(
-                    this, "Please select a doctor first."
-                );
-
-            } else {
-
-                setVisible(false);
-                new TokenQueueFrame(
-                    department, selectedDoctor, this
-                );
-            }
+            dispose();
+            new DepartmentFrame(department);
         }
     }
 }
