@@ -175,4 +175,4 @@ public class DepartmentFrame extends JFrame
         SwingUtilities.invokeLater(
                 () -> new DepartmentFrame(""));
     }
-        }
+                }
