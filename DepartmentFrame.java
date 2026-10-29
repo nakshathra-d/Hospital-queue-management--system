@@ -1,113 +1,178 @@
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class DepartmentFrame extends JFrame implements ActionListener {
+public class DepartmentFrame extends JFrame
+        implements ActionListener {
 
-    JLabel titleLabel;
-    JButton generalButton, cardioButton, entButton, pediatricButton;
-    JButton backButton;
+    JLabel title, instructionLabel;
+    JRadioButton generalButton, cardioButton;
+    JRadioButton entButton, pediatricsButton;
+    JButton continueButton, backButton;
 
-    Color navy = new Color(25, 55, 100);
-    Color lightBlue = new Color(230, 240, 250);
-    Color background = new Color(245, 248, 252);
+    ButtonGroup departmentGroup;
+    String selectedDepartment = "";
 
-    public DepartmentFrame() {
+    private final Color navyBlue = new Color(20, 55, 105);
+    private final Color blue = new Color(35, 105, 190);
+    private final Color lightBlue = new Color(235, 244, 255);
+    private final Color white = Color.WHITE;
+    private final Color textBlue = new Color(25, 55, 95);
 
-        setTitle("Hospital - Department Selection");
+    DepartmentFrame(String oldDepartment) {
+
+        setTitle("Department Selection");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(0, 15));
-        getContentPane().setBackground(background);
+        setLayout(new BorderLayout());
+        getContentPane().setBackground(lightBlue);
 
         // Heading
-        titleLabel = new JLabel(
-            "SELECT DEPARTMENT", JLabel.CENTER
-        );
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
-        titleLabel.setForeground(Color.WHITE);
-        titleLabel.setBackground(navy);
-        titleLabel.setOpaque(true);
-        titleLabel.setBorder(
-            BorderFactory.createEmptyBorder(25, 10, 25, 10)
-        );
+        title = new JLabel("SELECT DEPARTMENT", JLabel.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 32));
+        title.setForeground(white);
+        title.setBackground(navyBlue);
+        title.setOpaque(true);
+        title.setBorder(
+                BorderFactory.createEmptyBorder(25, 15, 25, 15));
 
-        add(titleLabel, BorderLayout.NORTH);
+        add(title, BorderLayout.NORTH);
 
-        // Department buttons
-        JPanel centerPanel = new JPanel(
-            new GridLayout(2, 2, 20, 20)
-        );
-        centerPanel.setBackground(background);
+        // Department selection panel
+        JPanel departmentPanel = new JPanel(
+                new GridLayout(5, 1, 10, 15));
+        departmentPanel.setBackground(white);
+        departmentPanel.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(200, 220, 245), 2),
+                        BorderFactory.createEmptyBorder(
+                                35, 60, 35, 60)));
 
-        // Increased outer margins make the buttons narrower
-        centerPanel.setBorder(
-            BorderFactory.createEmptyBorder(60, 180, 50, 180)
-        );
+        instructionLabel = new JLabel("Choose a department:");
+        instructionLabel.setFont(
+                new Font("Arial", Font.BOLD, 20));
+        instructionLabel.setForeground(blue);
 
-        generalButton = new JButton("General Medicine");
-        cardioButton = new JButton("Cardiology");
-        entButton = new JButton("ENT");
-        pediatricButton = new JButton("Pediatrics");
+        generalButton = new JRadioButton("General Medicine");
+        cardioButton = new JRadioButton("Cardiology");
+        entButton = new JRadioButton("ENT");
+        pediatricsButton = new JRadioButton("Pediatrics");
 
-        JButton[] departments = {
-            generalButton, cardioButton, entButton, pediatricButton
+        JRadioButton[] departments = {
+            generalButton, cardioButton,
+            entButton, pediatricsButton
         };
 
-        for (JButton button : departments) {
-            button.setFont(new Font("Arial", Font.BOLD, 19));
-            button.setBackground(lightBlue);
-            button.setForeground(navy);
+        departmentGroup = new ButtonGroup();
+
+        for (JRadioButton button : departments) {
+            button.setFont(new Font("Arial", Font.PLAIN, 18));
+            button.setPreferredSize(new Dimension(400, 55));
+            button.setForeground(textBlue);
+            button.setBackground(white);
             button.setFocusPainted(false);
+            button.setOpaque(true);
             button.setBorder(
-                BorderFactory.createLineBorder(
-                    new Color(190, 210, 230), 2
-                )
-            );
-            button.addActionListener(this);
-            centerPanel.add(button);
+                    BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+            departmentGroup.add(button);
+            departmentPanel.add(button);
         }
+
+        departmentPanel.add(instructionLabel, 0);
+
+        // Restore previous selection
+        if (oldDepartment != null) {
+            if (oldDepartment.equals("General Medicine")) {
+                generalButton.setSelected(true);
+            } else if (oldDepartment.equals("Cardiology")) {
+                cardioButton.setSelected(true);
+            } else if (oldDepartment.equals("ENT")) {
+                entButton.setSelected(true);
+            } else if (oldDepartment.equals("Pediatrics")) {
+                pediatricsButton.setSelected(true);
+            }
+        }
+
+        JPanel centerPanel = new JPanel(new GridBagLayout());
+        centerPanel.setBackground(lightBlue);
+        centerPanel.setBorder(
+                BorderFactory.createEmptyBorder(25, 35, 25, 35));
+        centerPanel.add(departmentPanel);
 
         add(centerPanel, BorderLayout.CENTER);
 
-        // Bottom panel
-        JPanel bottomPanel = new JPanel(
-            new FlowLayout(FlowLayout.CENTER, 20, 15)
-        );
-        bottomPanel.setBackground(background);
+        // Navigation buttons
+        JPanel buttonPanel = new JPanel(
+                new FlowLayout(FlowLayout.CENTER, 25, 20));
+        buttonPanel.setBackground(navyBlue);
+        buttonPanel.setBorder(
+                BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
         backButton = new JButton("Back");
-        backButton.setFont(new Font("Arial", Font.BOLD, 16));
-        backButton.setPreferredSize(new Dimension(140, 42));
-        backButton.setFocusPainted(false);
+        continueButton = new JButton("Continue");
+
+        styleButton(backButton, white, navyBlue, 110, 48);
+        styleButton(continueButton, blue, white, 145, 48);
+
+        buttonPanel.add(backButton);
+        buttonPanel.add(continueButton);
+
+        add(buttonPanel, BorderLayout.SOUTH);
+
         backButton.addActionListener(this);
+        continueButton.addActionListener(this);
 
-        bottomPanel.add(backButton);
-        add(bottomPanel, BorderLayout.SOUTH);
-
-        setSize(1000, 700);
+        setSize(900, 600);
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
     }
 
+    private void styleButton(JButton button, Color background,
+                             Color foreground, int width, int height) {
+        button.setFont(new Font("Arial", Font.BOLD, 17));
+        button.setPreferredSize(new Dimension(width, height));
+        button.setBackground(background);
+        button.setForeground(foreground);
+        button.setFocusPainted(false);
+        button.setCursor(
+                Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.setBorder(
+                BorderFactory.createEmptyBorder(8, 15, 8, 15));
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getSource() == backButton) {
+        if (e.getSource() == continueButton) {
+
+            if (generalButton.isSelected()) {
+                selectedDepartment = "General Medicine";
+            } else if (cardioButton.isSelected()) {
+                selectedDepartment = "Cardiology";
+            } else if (entButton.isSelected()) {
+                selectedDepartment = "ENT";
+            } else if (pediatricsButton.isSelected()) {
+                selectedDepartment = "Pediatrics";
+            } else {
+                JOptionPane.showMessageDialog(
+                        this, "Please select a department!");
+                return;
+            }
+
             dispose();
-            new PatientRegistrationFrame();
+            new DoctorFrame(selectedDepartment, "");
+        }
 
-        } else {
-            JButton selectedButton = (JButton) e.getSource();
-            String department = selectedButton.getText();
-
-            setVisible(false);
-            new DoctorFrame(department, this);
+        else if (e.getSource() == backButton) {
+            dispose();
+            new LoginFrame();
         }
     }
 
     public static void main(String[] args) {
-        new DepartmentFrame();
+        SwingUtilities.invokeLater(
+                () -> new DepartmentFrame(""));
     }
-}
+        }
